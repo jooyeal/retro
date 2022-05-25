@@ -2,8 +2,10 @@ import { GiphyFetch } from "@giphy/js-fetch-api";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import Appbar from "../components/Appbar";
 import Background from "../components/Background";
 
 interface Props {
@@ -23,7 +25,6 @@ const fetchGifs = (offset: number) => {
 const Home = ({ gifs, pagination }: Props) => {
   const [gifsState, setGifsState] = useState(gifs);
   const [page, setPage] = useState(1);
-
   const load = async () => {
     if (pagination.total_count > page * pagination.count) {
       const { data } = await fetchGifs(page);
@@ -40,18 +41,27 @@ const Home = ({ gifs, pagination }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Background />
+      <Appbar />
       <div className="p-8">
-        <InfiniteScroll pageStart={0} loadMore={load} hasMore={true}>
+        <InfiniteScroll
+          className="p-6"
+          pageStart={0}
+          loadMore={load}
+          hasMore={true}
+        >
           <div className="flex flex-wrap justify-center gap-6">
             {gifs
               ? gifsState.map((gif: any, index: number) => (
-                  <Image
-                    key={index}
-                    className="rounded-xl"
-                    src={gif.images.preview_gif.url}
-                    width={256}
-                    height={256}
-                  />
+                  <Link key={index} href={gif.bitly_url}>
+                    <a>
+                      <Image
+                        className="rounded-xl"
+                        src={gif.images.preview_gif.url}
+                        width={256}
+                        height={256}
+                      />
+                    </a>
+                  </Link>
                 ))
               : null}
           </div>

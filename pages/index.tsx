@@ -26,7 +26,7 @@ const Home = ({ gifs, pagination }: Props) => {
   const [gifsState, setGifsState] = useState(gifs);
   const [page, setPage] = useState(1);
   const load = async () => {
-    if (pagination.total_count > page * pagination.count) {
+    if (pagination.total_count > gifsState.length) {
       const { data } = await fetchGifs(page);
       setGifsState([...gifsState, ...data]);
       setPage((prev) => prev + 5);
